@@ -1,6 +1,5 @@
-'use client'
+'use client';
 import React, { useState } from 'react';
-import { createRoot } from 'react-dom/client';
 
 const rowStyle = {
   display: 'flex'
@@ -15,7 +14,7 @@ const squareStyle = {
   'justifyContent': 'center',
   'alignItems': 'center',
   'fontSize': '20px',
-  'color': 'white'
+  'cursor': 'pointer'
 }
 
 const boardStyle = {
@@ -49,39 +48,87 @@ const buttonStyle = {
   'backgroundColor': '#8acaca',
   'color': 'white',
   'fontSize': '16px',
+  'cursor': 'pointer'
 }
 
-function Square() {
+const emptySquares = Array(9).fill(null)
+
+function calculateWinner(squares) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+  return null;
+}
+
+function Square({ value, onClick }) {
   return (
     <div
       className="square"
-      style={squareStyle}>
+      style={squareStyle}
+      onClick={onClick}
+    >
+      {value}
     </div>
   );
 }
 
 function Board() {
+  const [squares, setSquares] = useState(emptySquares);
+  const [xIsNext, setXIsNext] = useState(true);
+
+  const handleClick = (i) => {
+    const squaresCopy = squares.slice();
+    if (calculateWinner(squares) || squaresCopy[i]) {
+      return;
+    }
+    squaresCopy[i] = xIsNext ? 'X' : 'O';
+    setSquares(squaresCopy);
+    setXIsNext(!xIsNext);
+  }
+
+  const resetGame = () => {
+    setSquares(emptySquares);
+    setXIsNext(true);
+  }
+
+  const winner = calculateWinner(squares);
+  const nextPlayer = xIsNext ? 'Next player: X': 'Next player: O'
+  const isBoardFull = squares.every(square => square !== null);
+
   return (
     <div style={containerStyle} className="gameBoard">
-      <div id="statusArea" className="status" style={instructionsStyle}>Next player: <span>X</span></div>
-      <div id="winnerArea" className="winner" style={instructionsStyle}>Winner: <span>Me</span></div>
-      <button style={buttonStyle}>Reset</button>
+      {!isBoardFull && !winner && (
+        <div id="statusArea" className="status" style={instructionsStyle}>{nextPlayer}</div>
+      )}
+      {(isBoardFull || winner ) && (
+        <div id="winnerArea" className="winner" style={instructionsStyle}>Winner: <span>{winner || 'None'}</span></div>
+      )}
+      <button style={buttonStyle} onClick={resetGame}>Reset</button>
       <div style={boardStyle}>
-        <div className="board-row" style={rowStyle}>
-          <Square />
-          <Square />
-          <Square />
-        </div>
-        <div className="board-row" style={rowStyle}>
-          <Square />
-          <Square />
-          <Square />
-        </div>
-        <div className="board-row" style={rowStyle}>
-          <Square />
-          <Square />
-          <Square />
-        </div>
+        {[0, 1, 2].map(row => (
+          <div key={row} className="board-row" style={rowStyle}>
+            {[0, 1, 2].map(col => (
+              <Square
+                key={3 * row + col}
+                value={squares[3 * row + col]}
+                onClick={() => handleClick(3 * row + col)}
+              />
+            ))}
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -1,95 +1,98 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client'
+import React, { useState } from 'react';
+import { createRoot } from 'react-dom/client';
 
-export default function Home() {
+const rowStyle = {
+  display: 'flex'
+}
+
+const squareStyle = {
+  'width':'60px',
+  'height':'60px',
+  'backgroundColor': '#ddd',
+  'margin': '4px',
+  'display': 'flex',
+  'justifyContent': 'center',
+  'alignItems': 'center',
+  'fontSize': '20px',
+  'color': 'white'
+}
+
+const boardStyle = {
+  'backgroundColor': '#eee',
+  'width': '208px',
+  'alignItems': 'center',
+  'justifyContent': 'center',
+  'display': 'flex',
+  'flexDirection': 'column',
+  'border': '3px #eee solid'
+}
+
+const containerStyle = {
+  'display': 'flex',
+  'alignItems': 'center',
+  'flexDirection': 'column'
+}
+
+const instructionsStyle = {
+  'marginTop': '5px',
+  'marginBottom': '5px',
+  'fontWeight': 'bold',
+  'fontSize': '16px',
+}
+
+const buttonStyle = {
+  'marginTop': '15px',
+  'marginBottom': '16px',
+  'width': '80px',
+  'height': '40px',
+  'backgroundColor': '#8acaca',
+  'color': 'white',
+  'fontSize': '16px',
+}
+
+function Square() {
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <div
+      className="square"
+      style={squareStyle}>
+    </div>
+  );
+}
+
+function Board() {
+  return (
+    <div style={containerStyle} className="gameBoard">
+      <div id="statusArea" className="status" style={instructionsStyle}>Next player: <span>X</span></div>
+      <div id="winnerArea" className="winner" style={instructionsStyle}>Winner: <span>Me</span></div>
+      <button style={buttonStyle}>Reset</button>
+      <div style={boardStyle}>
+        <div className="board-row" style={rowStyle}>
+          <Square />
+          <Square />
+          <Square />
+        </div>
+        <div className="board-row" style={rowStyle}>
+          <Square />
+          <Square />
+          <Square />
+        </div>
+        <div className="board-row" style={rowStyle}>
+          <Square />
+          <Square />
+          <Square />
         </div>
       </div>
+    </div>
+  );
+}
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+export default function Game() {
+  return (
+    <div className="game">
+      <div className="game-board">
+        <Board />
       </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </div>
   );
 }
